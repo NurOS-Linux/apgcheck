@@ -140,11 +140,11 @@ func extractTarXz(src, dest string) error {
 }
 
 func generateRandomNumber() string {
-	rand.Seed(time.Now().UnixNano())
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	num := ""
 	for i := 0; i < 8; i++ {
-		digit := rand.Intn(10)
+		digit := r.Intn(10)
 		num += fmt.Sprint(digit)
 	}
 
