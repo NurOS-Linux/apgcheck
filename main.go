@@ -321,7 +321,7 @@ func main() {
 		fmt.Printf("%sapgcheck v%s%s\n", ColorBold, Version, Reset)
 		fmt.Printf("%sAPG file validator for NurOS%s\n", ColorBlue, Reset)
 		fmt.Println("Licensed under GPL 3.0")
-		fmt.Println("Copyright © 2025 NurOS Contributors")
+		fmt.Println("Copyright © 2005 NurOS Contributors")
 		os.Exit(0)
 	}
 
