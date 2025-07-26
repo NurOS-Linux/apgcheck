@@ -35,7 +35,7 @@ type Metadata struct {
 
 const (
 	// Main
-	Version string = "0.1.0-rc1"
+	Version string = "0.1.0"
 )
 
 // Color support variables
