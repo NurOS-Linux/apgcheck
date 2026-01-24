@@ -1,6 +1,7 @@
 # TODO
-### MD5 Checksum Verification
+### Checksum Verification
 - [ ] Implement reading of `md5sums` file
+- [ ] Implement reading of `crc32sums` file
 - [ ] Check hashes of all files in `data/` directory
 - [ ] Detailed report on mismatched hashes
 - [ ] `--skip-checksums` option to skip verification
