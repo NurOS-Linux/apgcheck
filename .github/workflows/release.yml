@@ -1,0 +1,80 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Build and package (${{ matrix.goarch }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - goarch: amd64
+            deb_arch: amd64
+            rpm_arch: x86_64
+            pkg_arch: x86_64
+          - goarch: arm64
+            deb_arch: arm64
+            rpm_arch: aarch64
+            pkg_arch: aarch64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Get version
+        id: version
+        run: echo "value=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Build binary
+        env:
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: "0"
+        run: go build -ldflags="-s -w" -o apgcheck .
+
+      - name: Install nfpm
+        run: |
+          curl -fsSL https://github.com/goreleaser/nfpm/releases/latest/download/nfpm_linux_amd64.tar.gz \
+            | tar -xz nfpm
+          sudo mv nfpm /usr/local/bin/nfpm
+
+      - name: Package deb
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          NFPM_ARCH: ${{ matrix.deb_arch }}
+        run: |
+          nfpm package --config nfpm.yaml --packager deb \
+            --target apgcheck_${{ steps.version.outputs.value }}_${{ matrix.deb_arch }}.deb
+
+      - name: Package rpm
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          NFPM_ARCH: ${{ matrix.rpm_arch }}
+        run: |
+          nfpm package --config nfpm.yaml --packager rpm \
+            --target apgcheck_${{ steps.version.outputs.value }}_${{ matrix.rpm_arch }}.rpm
+
+      - name: Package pkg.tar.zst
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          NFPM_ARCH: ${{ matrix.pkg_arch }}
+        run: |
+          nfpm package --config nfpm.yaml --packager archlinux \
+            --target apgcheck_${{ steps.version.outputs.value }}_${{ matrix.pkg_arch }}.pkg.tar.zst
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            apgcheck_*.deb
+            apgcheck_*.rpm
+            apgcheck_*.pkg.tar.zst

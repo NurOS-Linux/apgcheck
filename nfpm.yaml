@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: m1lkydev, AnmiTaliDev
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: apgcheck
+arch: ${NFPM_ARCH}
+version: ${VERSION}
+release: 1
+section: utils
+priority: optional
+maintainer: GitHub Actions
+description: APG file validator for NurOS
+license: GPL-3.0-or-later
+homepage: https://github.com/NurOS-Linux/apgcheck
+
+contents:
+  - src: apgcheck
+    dst: /usr/bin/apgcheck
+    file_info:
+      mode: 0755
