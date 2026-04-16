@@ -23,6 +23,10 @@ jobs:
             deb_arch: arm64
             rpm_arch: aarch64
             pkg_arch: aarch64
+          - goarch: riscv64
+            deb_arch: riscv64
+            rpm_arch: riscv64
+            pkg_arch: riscv64
 
     steps:
       - uses: actions/checkout@v4
