@@ -42,10 +42,7 @@ jobs:
         run: go build -ldflags="-s -w" -o apgcheck .
 
       - name: Install nfpm
-        run: |
-          curl -fsSL https://github.com/goreleaser/nfpm/releases/latest/download/nfpm_linux_amd64.tar.gz \
-            | tar -xz nfpm
-          sudo mv nfpm /usr/local/bin/nfpm
+        run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest
 
       - name: Package deb
         env:
